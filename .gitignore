@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Visual QA screenshots
+.visual
+
+# Playwright artifacts
+test-results
+playwright-report
+
+# Product and design source material (not part of the public source tree)
+PRD.pdf
+*.zip
+brand-source/
+/heic_test.heic
+
+# Real HEIC test photos carry camera and GPS metadata; keep them local.
+tests/fixtures/*.heic
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
