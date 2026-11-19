@@ -20,7 +20,7 @@ export const converterRoutes: ConverterRoute[] = [
     h1: 'Convert HEIC to JPG Instantly',
     h1Accent: 'HEIC to JPG',
     intro:
-      'Turn Apple iPhone and iPad .heic photos into universal JPG files inside your browser — no uploads, no queues, and no surprise quality loss.',
+      'Turn Apple iPhone and iPad .heic photos into universal JPG files inside your browser.',
     keyword: 'heic to jpg',
     defaultFormat: 'jpg',
     metaTitle: 'HEIC to JPG Converter — Free & Private | ClearHEIC',
