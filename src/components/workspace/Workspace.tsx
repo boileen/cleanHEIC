@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { formatLabels, formatRoutes, type ConverterRoute, type OutputFormat } from '@/app/routes'
@@ -99,6 +99,25 @@ export function Workspace({ route }: { route: ConverterRoute }) {
   useEffect(() => {
     resetResults()
   }, [activeFormat, resetResults])
+
+  // Bring the queue into view the first time photos are added, so the results
+  // are visible without hunting for them below the upload card.
+  const queueRef = useRef<HTMLDivElement>(null)
+  const hadItems = useRef(false)
+
+  useEffect(() => {
+    const hasItems = items.length > 0
+    if (hasItems && !hadItems.current) {
+      const reduced =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      queueRef.current?.scrollIntoView?.({
+        block: 'start',
+        behavior: reduced ? 'auto' : 'smooth',
+      })
+    }
+    hadItems.current = hasItems
+  }, [items.length])
 
   const handleFiles = (incoming: FileList | File[]) => {
     setNotice(addFiles(incoming))
@@ -365,7 +384,7 @@ export function Workspace({ route }: { route: ConverterRoute }) {
             </ul>
           </div>
 
-          <div className="mt-4 px-4 sm:px-5">
+          <div className="mt-4 scroll-mt-24 px-4 sm:px-5" ref={queueRef}>
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
               <h4 className="text-base font-semibold text-ink">
                 Batch queue{' '}

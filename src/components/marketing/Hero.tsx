@@ -29,7 +29,7 @@ function Headline({ route }: { route: ConverterRoute }) {
 
 export function Hero({ route }: { route: ConverterRoute }) {
   return (
-    <section className="w-full pb-8 pt-12 text-center">
+    <section className="w-full pb-6 pt-6 text-center sm:pt-8">
       <Container width="workspace">
         <div className="mx-auto flex max-w-3xl flex-col items-center">
           <h1 className="text-balance text-headline-xl-mobile leading-tight text-ink sm:text-headline-xl">
@@ -38,7 +38,7 @@ export function Hero({ route }: { route: ConverterRoute }) {
 
           <p className="mx-auto mt-4 max-w-2xl text-body-lg text-ink-secondary">{route.intro}</p>
 
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] font-medium text-ink-secondary">
+          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[13px] font-medium text-ink-secondary">
             {trustItems.map((item) => (
               <li key={item.label} className="flex items-center gap-1.5 whitespace-nowrap">
                 <Icon name={item.icon} className={`h-4 w-4 shrink-0 ${item.tone}`} />
