@@ -12,6 +12,8 @@ function ensureMeta(selector: string, attributes: Record<string, string>): HTMLM
   return element
 }
 
+const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://clearheic.com'
+
 export function useDocumentMeta(route: ConverterRoute): void {
   useEffect(() => {
     document.title = route.metaTitle
@@ -43,6 +45,6 @@ export function useDocumentMeta(route: ConverterRoute): void {
       canonical.rel = 'canonical'
       document.head.appendChild(canonical)
     }
-    canonical.href = `${window.location.origin}${route.path}`
+    canonical.href = `${SITE_URL}${route.path}`
   }, [route])
 }

@@ -37,13 +37,25 @@ single-page PDF available from each result row.
 ```bash
 npm install
 npm run dev        # local development
-npm run build      # typecheck + production build
+npm run build      # typecheck, client build, SSR build, prerender, SEO validation
 npm run preview    # preview the production build
 npm run typecheck  # TypeScript only
 npm run lint       # oxlint
 npm test           # Vitest unit tests
 npm run test:e2e   # Playwright end-to-end tests (uses installed Chrome)
 ```
+
+## SEO and deployment
+
+`npm run build` pre-renders the four converter routes into `dist/<route>/index.html`
+with real titles, H1s, canonical links and Open Graph tags, then writes
+`sitemap.xml` and `robots.txt`. The build fails if a page is missing its title,
+H1 or canonical, or if two pages share one.
+
+Canonical URLs default to `https://clearheic.com`. Set `VITE_SITE_URL` in Netlify's
+environment variables to override it — useful for preview deployments. Netlify
+serves real files before applying the SPA fallback, so the pre-rendered pages
+are delivered directly.
 
 ## Structure
 

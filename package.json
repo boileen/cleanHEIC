@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run typecheck && npm run build:client && npm run build:ssr && npm run prerender && npm run validate:seo",
+    "build:client": "vite build",
+    "build:ssr": "vite build --config vite.config.ssr.ts",
+    "prerender": "node scripts/prerender.mjs",
+    "validate:seo": "node scripts/validate-seo.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "lint": "oxlint",

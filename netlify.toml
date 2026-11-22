@@ -6,8 +6,9 @@
   # Vite 8 requires Node 20.19+ or 22.12+.
   NODE_VERSION = "22"
 
-# Client-side routes must fall back to index.html. Requests that match a real
-# file in dist/ (hashed assets, icons, the decoder worker) are served first.
+# Client-side routes fall back to index.html. Netlify serves real files first
+# (file shadowing), so the pre-rendered /heic-to-* directories, hashed assets,
+# icons and decoder worker are delivered directly without being rewritten.
 [[redirects]]
   from = "/*"
   to = "/index.html"

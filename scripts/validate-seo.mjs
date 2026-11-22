@@ -1,0 +1,111 @@
+/**
+ * Build-time guard for the pre-rendered SEO output. Fails the build when a
+ * page is missing its title/H1/canonical, or when two pages share a title or
+ * canonical URL — mistakes that quietly harm search rankings.
+ *
+ * Usage: node scripts/validate-seo.mjs
+ * Env:   VITE_SITE_URL (defaults to https://clearheic.com)
+ */
+import { readFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const root = resolve(__dirname, '..')
+const dist = resolve(root, 'dist')
+const SITE_URL = (process.env.VITE_SITE_URL ?? 'https://clearheic.com').replace(/\/$/, '')
+
+const { converterRoutes } = await import(
+  pathToFileURL(resolve(root, 'dist-ssr', 'entry-server.js')).href
+)
+
+const errors = []
+const titles = new Map()
+const canonicals = new Map()
+
+const count = (html, pattern) => (html.match(pattern) ?? []).length
+
+for (const route of converterRoutes) {
+  const path = route.path.replace(/^\//, '')
+  let html
+  try {
+    html = readFileSync(resolve(dist, path, 'index.html'), 'utf8')
+  } catch {
+    errors.push(`${route.path}: index.html is missing — did prerender run?`)
+    continue
+  }
+
+  const titleTags = html.match(/<title>([\s\S]*?)<\/title>/gi) ?? []
+  if (titleTags.length !== 1) {
+    errors.push(`${route.path}: expected 1 <title>, found ${titleTags.length}`)
+  } else {
+    const title = titleTags[0].replace(/<\/?title>/gi, '').trim()
+    if (!title) errors.push(`${route.path}: <title> is empty`)
+    if (titles.has(title)) {
+      errors.push(`Duplicate title "${title}" on ${titles.get(title)} and ${route.path}`)
+    }
+    titles.set(title, route.path)
+  }
+
+  const canonicalTags = html.match(/<link[^>]+rel="canonical"[^>]*>/gi) ?? []
+  if (canonicalTags.length !== 1) {
+    errors.push(`${route.path}: expected 1 canonical link, found ${canonicalTags.length}`)
+  } else {
+    const hrefMatch = canonicalTags[0].match(/href="([^"]*)"/i)
+    const href = hrefMatch?.[1] ?? ''
+    const expected = `${SITE_URL}${route.path}`
+    if (href !== expected) {
+      errors.push(`${route.path}: canonical is "${href}", expected "${expected}"`)
+    }
+    if (canonicals.has(href)) {
+      errors.push(`Duplicate canonical "${href}" on ${canonicals.get(href)} and ${route.path}`)
+    }
+    canonicals.set(href, route.path)
+  }
+
+  if (count(html, /<h1[\s>]/gi) < 1) {
+    errors.push(`${route.path}: no <h1> found in the pre-rendered markup`)
+  }
+
+  if (count(html, /<meta\s+name="description"/gi) !== 1) {
+    errors.push(`${route.path}: expected exactly 1 meta description`)
+  }
+}
+
+// sitemap.xml must list exactly the pre-rendered routes.
+let sitemap = ''
+try {
+  sitemap = readFileSync(resolve(dist, 'sitemap.xml'), 'utf8')
+} catch {
+  errors.push('sitemap.xml is missing')
+}
+if (sitemap) {
+  const locs = sitemap.match(/<loc>([\s\S]*?)<\/loc>/g) ?? []
+  if (locs.length !== converterRoutes.length) {
+    errors.push(`sitemap.xml has ${locs.length} URLs, expected ${converterRoutes.length}`)
+  }
+  for (const route of converterRoutes) {
+    if (!sitemap.includes(`${SITE_URL}${route.path}`)) {
+      errors.push(`sitemap.xml is missing ${route.path}`)
+    }
+  }
+}
+
+// robots.txt must point crawlers at the sitemap.
+let robots = ''
+try {
+  robots = readFileSync(resolve(dist, 'robots.txt'), 'utf8')
+} catch {
+  errors.push('robots.txt is missing')
+}
+if (robots && !robots.includes(`Sitemap: ${SITE_URL}/sitemap.xml`)) {
+  errors.push('robots.txt does not reference the sitemap')
+}
+
+if (errors.length) {
+  console.error('SEO validation failed:')
+  for (const error of errors) console.error(`  - ${error}`)
+  process.exit(1)
+}
+
+console.log(`SEO validation passed: ${converterRoutes.length} unique titles, canonicals and H1s`)
