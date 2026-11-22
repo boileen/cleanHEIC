@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "visual:check": "node scripts/visual-check.mjs",
     "articles:import": "node scripts/import-articles.mjs",
+    "package": "node scripts/pack-deploy.mjs",
     "brand:icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {

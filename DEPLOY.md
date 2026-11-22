@@ -18,7 +18,9 @@ fails the build if a page is missing a title, H1 or canonical, or if two pages
 share one.
 
 `dist/` is the complete deployable site. It includes `.htaccess`, which is
-copied from `public/.htaccess` by Vite.
+copied from `public/.htaccess` by Vite. Run `npm run package` afterwards to
+create `clearheic-cpanel-upload.zip` — it packages the *contents* of `dist/`
+with forward-slash paths so cPanel extracts real folders.
 
 Canonical URLs default to `https://clearheic.com`. For staging on another
 domain, rebuild with the staging URL before packaging:
