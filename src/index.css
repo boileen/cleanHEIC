@@ -54,4 +54,28 @@
   .badge-neutral {
     @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-canvas px-2.5 py-1 font-mono text-[11px] font-medium text-ink-secondary;
   }
+
+  .article-prose {
+    @apply text-body-md leading-relaxed text-ink-secondary;
+  }
+
+  .article-prose h2 {
+    @apply mt-10 text-headline-md tracking-tight text-ink;
+  }
+
+  .article-prose h3 {
+    @apply mt-7 text-lg font-semibold text-ink;
+  }
+
+  .article-prose p {
+    @apply mt-3;
+  }
+
+  .article-prose ul {
+    @apply mt-3 list-disc space-y-2 pl-5;
+  }
+
+  .article-prose a {
+    @apply font-semibold text-primary underline decoration-primary/30 underline-offset-2 hover:decoration-primary;
+  }
 }

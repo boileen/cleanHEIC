@@ -5,6 +5,7 @@ import { ComparisonTable } from '@/components/marketing/ComparisonTable'
 import { CtaBanner } from '@/components/marketing/CtaBanner'
 import { Faq } from '@/components/marketing/Faq'
 import { Features } from '@/components/marketing/Features'
+import { RelatedGuides } from '@/components/marketing/RelatedGuides'
 import { Hero } from '@/components/marketing/Hero'
 import { HowItWorks } from '@/components/marketing/HowItWorks'
 import { Workspace } from '@/components/workspace/Workspace'
@@ -24,6 +25,7 @@ export function ConverterPage() {
       <Features />
       <ComparisonTable route={route} />
       <Faq route={route} />
+      <RelatedGuides converter={route.path} />
       <CtaBanner />
     </>
   )

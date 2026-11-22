@@ -1,0 +1,42 @@
+# ClearHEIC — Apache / cPanel static hosting.
+# The site is pre-rendered HTML + hashed assets. No Node.js and no server-side
+# conversion happens here; every request is served as a static file.
+
+Options -Indexes
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # /heic-to-jpg, /guides and /guides/<slug> are real directories containing
+  # pre-rendered index.html files. Serve those files directly so the URLs stay
+  # slashless and match their canonical URLs. Without this, mod_dir would 301
+  # /heic-to-jpg -> /heic-to-jpg/ and create duplicate URLs in search results.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+?)/?$ $1/index.html [L]
+
+  # Other client-side routes (404, future pages) fall back to the shell.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+
+  # Vite fingerprints everything under /assets/, so it can be cached forever.
+  RewriteCond %{REQUEST_URI} ^/assets/ [NC]
+  RewriteRule ^ - [E=CLEARHEIC_IMMUTABLE:1]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  Header set Cache-Control "public, max-age=31536000, immutable" env=CLEARHEIC_IMMUTABLE
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType image/svg+xml .svg
+</IfModule>

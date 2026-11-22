@@ -13,13 +13,15 @@ serves HTML, JavaScript, CSS, fonts, and WASM.
 | `design.md` | Product design, visual tokens, and stack |
 | `architecture.md` | System architecture, contracts, deployment |
 | `plan.md` | Milestone plan and launch checklist |
+| `DEPLOY.md` | cPanel static-hosting build and upload steps |
 
 ## Current status
 
 The four converter routes are live: HEIC to JPG, PNG, WebP, and PDF. JPG, PNG,
 and WebP run through a real WebAssembly decoder and produce verified output. PDF
 export compiles one image per page into an A4 or US Letter document, with a
-single-page PDF available from each result row.
+single-page PDF available from each result row. A `/guides` section with 12
+curated HEIC articles is linked from the footer and each converter page.
 
 ## Stack
 
@@ -43,19 +45,20 @@ npm run typecheck  # TypeScript only
 npm run lint       # oxlint
 npm test           # Vitest unit tests
 npm run test:e2e   # Playwright end-to-end tests (uses installed Chrome)
+npm run articles:import # re-import the 12 curated articles from the local draft ZIP
 ```
 
 ## SEO and deployment
 
-`npm run build` pre-renders the four converter routes into `dist/<route>/index.html`
-with real titles, H1s, canonical links and Open Graph tags, then writes
-`sitemap.xml` and `robots.txt`. The build fails if a page is missing its title,
-H1 or canonical, or if two pages share one.
+`npm run build` pre-renders all 17 pages (4 converters, `/guides` and 12 articles)
+into `dist/<route>/index.html` with real titles, H1s, canonical links and Open
+Graph tags, then writes `sitemap.xml` and `robots.txt`. The build fails if a page
+is missing its title, H1 or canonical, or if two pages share one.
 
-Canonical URLs default to `https://clearheic.com`. Set `VITE_SITE_URL` in Netlify's
-environment variables to override it — useful for preview deployments. Netlify
-serves real files before applying the SPA fallback, so the pre-rendered pages
-are delivered directly.
+Canonical URLs default to `https://clearheic.com`. Set `VITE_SITE_URL` at build
+time to override it for staging. The target is cPanel static hosting: `dist/`
+(including `public/.htaccess`) is uploaded to `public_html` with no server-side
+runtime. See `DEPLOY.md` for the full upload and verification checklist.
 
 ## Structure
 

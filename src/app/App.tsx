@@ -2,7 +2,9 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 import { converterRoutes } from '@/app/routes'
 import { SiteLayout } from '@/components/layout/SiteLayout'
+import { ArticlePage } from '@/pages/ArticlePage'
 import { ConverterPage } from '@/pages/ConverterPage'
+import { GuidesPage } from '@/pages/GuidesPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 
 export default function App() {
@@ -18,6 +20,8 @@ export default function App() {
             element={<ConverterPage />}
           />
         ))}
+        <Route path="guides" element={<GuidesPage />} />
+        <Route path="guides/:slug" element={<ArticlePage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

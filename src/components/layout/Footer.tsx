@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 
 import { converterRoutes } from '@/app/routes'
 import { Icon } from '@/components/ui/Icon'
+import { publishedArticles } from '@/content/articles'
 import { Container } from './Container'
 
 const CURRENT_YEAR = new Date().getFullYear()
@@ -11,7 +12,7 @@ export function Footer() {
     <footer className="mt-0 border-t border-line bg-surface">
       <Container width="shell" className="py-10">
         <div className="grid gap-8 md:grid-cols-12">
-          <div className="flex flex-col gap-3 md:col-span-6">
+          <div className="flex flex-col gap-3 md:col-span-5">
             <div className="flex items-center gap-3">
               <img
                 src="/brand/clearheic-mark.svg"
@@ -45,7 +46,7 @@ export function Footer() {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 md:col-span-3">
+          <div className="flex flex-col gap-2 md:col-span-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink">
               Converters
             </span>
@@ -59,6 +60,32 @@ export function Footer() {
                   {route.navLabel}
                 </Link>
               ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 md:col-span-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-ink">
+              Guides
+            </span>
+            <div className="flex flex-col gap-1.5">
+              <Link
+                to="/guides"
+                className="text-body-md font-semibold text-ink transition-colors hover:text-primary"
+              >
+                All guides
+              </Link>
+              {['heic-to-jpg-on-iphone', 'convert-heic-to-jpg-online-safely', 'heic-unsupported-image-uploads']
+                .map((slug) => publishedArticles.find((article) => article.slug === slug))
+                .filter((article): article is (typeof publishedArticles)[number] => Boolean(article))
+                .map((article) => (
+                  <Link
+                    key={article.slug}
+                    to={`/guides/${article.slug}`}
+                    className="text-body-md text-ink-secondary transition-colors hover:text-ink"
+                  >
+                    {article.title}
+                  </Link>
+                ))}
             </div>
           </div>
 
