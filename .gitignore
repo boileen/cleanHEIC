@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local analytics reference material supplied by the client
+analytics/
+
 # Visual QA screenshots
 .visual
 
