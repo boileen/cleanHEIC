@@ -47,6 +47,14 @@ Remove the override (or start a fresh shell) and rebuild for production.
 The ZIP contains the *contents* of `dist/`, not the `dist/` directory itself,
 and uses forward-slash paths so cPanel extracts real folders.
 
+## Analytics and site verification
+
+`index.html` loads Google Tag Manager container `GTM-WCFL58WL` on every page.
+The container itself must be configured in Google Tag Manager to record anything;
+the site only loads the manager script. `public/google72013dbe9aafc2b3.html` is a
+Google Search Console ownership-verification file and must remain at the site
+root.
+
 ## Verify after upload
 
 | Check | Expected |

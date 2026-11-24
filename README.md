@@ -86,4 +86,6 @@ committed because it contains camera and GPS metadata. See
 
 There is no upload endpoint. The conversion pipeline runs in the browser, and
 temporary object URLs are revoked when a queue is cleared or the page closes.
-See `architecture.md` for the full privacy and security model.
+The site loads Google Tag Manager for visit analytics; it never receives photo
+data or conversion input. See `architecture.md` for the full privacy and
+security model.
